@@ -1,8 +1,10 @@
-package com.vladislav.blockchain;
+package com.vladislav.blockchain.pojo;
 
+import com.vladislav.blockchain.Block;
 import com.vladislav.blockchain.utils.Utils;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -14,7 +16,7 @@ public class Miner {
         this.number = number;
     }
 
-    public Block createBlock(String previousBlockHash, int countOfZeros, int blockId) {
+    public Block createBlock(String previousBlockHash, int countOfZeros, int blockId, Collection<Message> messages) {
         Objects.requireNonNull(previousBlockHash);
         final ThreadLocalRandom random = ThreadLocalRandom.current();
         Block block;
@@ -24,7 +26,8 @@ public class Miner {
                     blockId,
                     Instant.now(),
                     previousBlockHash,
-                    random.nextInt(100000, 1000000)
+                    random.nextInt(100000, 1000000),
+                    messages
             );
             block.setMinerNumber(number);
         } while (!Utils.checkCountOfZeros(block, countOfZeros));

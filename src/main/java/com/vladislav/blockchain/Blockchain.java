@@ -29,21 +29,21 @@ public class Blockchain {
         return true;
     }
 
-    public synchronized boolean accept(Block block) {
+    public synchronized void accept(Block block) {
         Objects.requireNonNull(block);
         if (lastBlock == null) {
             if (!block.getPreviousBlockHash().equals("0") || block.getId() != 1) {
                 throw new IncorrectBlock();
             }
             addBlock(block);
-            return true;
+            return;
         } else {
             if (checkPreviousBlockHash(block) && checkCountOfZeros(block) && block.getId() - 1 == lastBlock.getId()) {
                 addBlock(block);
-                return true;
+                return;
             }
         }
-        return false;
+        throw new IncorrectBlock();
     }
 
     private boolean checkCountOfZeros(Block block) {
