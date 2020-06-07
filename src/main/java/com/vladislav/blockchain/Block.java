@@ -1,8 +1,11 @@
 package com.vladislav.blockchain;
 
+import com.vladislav.blockchain.pojo.Message;
 import com.vladislav.blockchain.utils.Utils;
 
 import java.time.Instant;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 
 public class Block {
@@ -11,17 +14,29 @@ public class Block {
     private final Instant timestamp;
     private final String previousBlockHash;
     private final int magic;
+    private final Collection<Message> messages;
 
     // p.s: To complete a task
     private transient Integer minerNumber;
 
-    Block(int id, Instant timestamp, String previousBlockHash, int magic) {
+    public Block(int id, Instant timestamp, String previousBlockHash, int magic) {
         Objects.requireNonNull(previousBlockHash);
         Objects.requireNonNull(timestamp);
         this.id = id;
         this.timestamp = timestamp;
         this.previousBlockHash = previousBlockHash;
         this.magic = magic;
+        messages = Collections.emptyList();
+    }
+
+    public Block(
+            int id, Instant timestamp, String previousBlockHash, int magic, Collection<Message> messages
+    ) {
+        this.id = id;
+        this.timestamp = timestamp;
+        this.previousBlockHash = previousBlockHash;
+        this.magic = magic;
+        this.messages = Collections.unmodifiableCollection(messages);
     }
 
     public int getId() {
@@ -45,6 +60,10 @@ public class Block {
         return minerNumber;
     }
 
+    public Collection<Message> getMessages() {
+        return messages;
+    }
+
     // p.s: To complete a task
     public void setMinerNumber(int minerNumber) {
         this.minerNumber = minerNumber;
@@ -57,6 +76,7 @@ public class Block {
                         .append(timestamp)
                         .append(previousBlockHash)
                         .append(magic)
+                        .append(messages)
                         .toString()
         );
     }
